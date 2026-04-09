@@ -2,6 +2,8 @@
 import { Slug } from '../entities/value-objects/slug'
 import { Entity } from "../../core/entities/entity";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
+import type { Optional } from '@/core/entities/types/optional';
+import dayjs from 'dayjs';
 
 interface QuestionProps {
     authorId: UniqueEntityId,
@@ -9,10 +11,76 @@ interface QuestionProps {
     title: string,
     content: string,
     slug: Slug,
-    createdAt?: Date,
+    createdAt: Date,
     updatedAt?: Date,
 }
 
 export class Question extends Entity<QuestionProps> {
 
+    get authorId() {
+        return this.props.authorId;
+    }
+
+    get bestAnswerId() {
+        return this.props.bestAnswerId;
+    }
+
+    set bestAnswerId(bestAnswerId: UniqueEntityId | undefined) {
+        if (bestAnswerId === undefined) {
+            delete this.props.bestAnswerId;
+        } else {
+            this.props.bestAnswerId = bestAnswerId;
+        }
+        this.touch();
+    }
+
+    get title() {
+        return this.props.title;
+    }
+
+    set title(title: string) {
+        this.props.title = title;
+        this.props.slug = Slug.createFromText(title);
+        this.touch();
+    }
+
+    get content() {
+        return this.props.content;
+    }
+
+    set content(content: string) {
+        this.props.content = content;
+        this.touch();
+    }
+
+    private touch() {
+        this.props.updatedAt = new Date();
+    }
+
+    get slug() {
+        return this.props.slug;
+    }
+
+    get createdAt() {
+        return this.props.createdAt;
+    }
+
+    get updatedAt() {
+        return this.props.updatedAt;
+    }
+
+    get isNew(): boolean {
+        return dayjs().diff(this.createdAt, 'day') <= 3;
+    }
+
+    static create(props: Optional<QuestionProps, 'createdAt' | 'slug'>, id?: UniqueEntityId) {
+        const question = new Question(id, {
+            ...props,
+            slug: props.slug ?? Slug.createFromText(props.title),
+            createdAt: new Date()
+        });
+        return question
+    }
 }
+
+

@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix"
   },
   "repository": {
     "type": "git",
@@ -20,8 +22,17 @@
   },
   "homepage": "https://github.com/gabrielVrodriguez/praticando-DDD#readme",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^25.5.0",
+    "eslint": "^10.2.0",
+    "globals": "^17.4.0",
+    "jiti": "^2.6.1",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.58.1",
+    "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.1.1"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.20"
   }
 }
