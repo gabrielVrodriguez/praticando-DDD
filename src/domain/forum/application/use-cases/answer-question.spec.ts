@@ -1,6 +1,6 @@
 import { AnswerQuestionUseCase } from './answer-question';
-import type { AnswersRepository } from '../repositories/answer-repository';
-import type { Answer } from '../entities/answer';
+import type { AnswersRepository } from '../.././application/repositories/answer-repository';
+import type { Answer } from '../../enterprise/entities/answer';
 
 
 const fakeAnswersRepository: AnswersRepository = {
@@ -11,7 +11,7 @@ const fakeAnswersRepository: AnswersRepository = {
 
 describe('create an answer', () => {
 
-  
+
     it('should be able to create an answer', async () => {
         const answerQuestion = new AnswerQuestionUseCase(fakeAnswersRepository);
 

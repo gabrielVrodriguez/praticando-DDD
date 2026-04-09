@@ -1,6 +1,6 @@
 
-import { Slug } from '../entities/value-objects/slug'
-import { Entity } from "../../core/entities/entity";
+import { Slug } from './value-objects/slug'
+import { Entity } from "../../../../core/entities/entity";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import type { Optional } from '@/core/entities/types/optional';
 import dayjs from 'dayjs';
