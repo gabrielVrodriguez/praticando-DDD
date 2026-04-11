@@ -1,22 +1,19 @@
-import { AnswerQuestionUseCase } from './answer-question';
-import type { QuestionRepository } from '../.././application/repositories/question-repository';
-import type { Question } from '../../enterprise/entities/question';
+import { inMemoryQuestionsRepository } from '@/../test/repositories/in-memory-questions-repository';
 import { createQuestionUseCase } from './create-question';
 
-
-const fakeQuestionRepository: QuestionRepository = {
-    async create(question: Question): Promise<void> {
-        return;
-    }
-}
+let questionsRepository: inMemoryQuestionsRepository;
+let sut: createQuestionUseCase;
 
 describe('create a question', () => {
-
+    
+    beforeEach(() => {
+        questionsRepository = new inMemoryQuestionsRepository();
+        sut = new createQuestionUseCase(questionsRepository);
+    })
 
     it('should be able to create a question', async () => {
-        const createQuestion = new createQuestionUseCase(fakeQuestionRepository);
 
-        const { question } = await createQuestion.execute({
+        const { question } = await sut.execute({
             authorId: 'instructor-id',
             title: 'This is a question',
             content: 'This is the content of the question'
