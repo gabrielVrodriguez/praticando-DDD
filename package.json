@@ -23,6 +23,7 @@
   "homepage": "https://github.com/gabrielVrodriguez/praticando-DDD#readme",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@faker-js/faker": "^10.4.0",
     "@types/node": "^25.5.0",
     "eslint": "^10.2.0",
     "globals": "^17.4.0",
