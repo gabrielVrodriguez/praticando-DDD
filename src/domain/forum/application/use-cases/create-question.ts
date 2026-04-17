@@ -1,5 +1,5 @@
 import { Question } from "../../enterprise/entities/question";
-import { type QuestionRepository } from "../repositories/question-repository";
+import { type QuestionsRepository } from "../repositories/questions-repository";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.js";
 
 interface createQuestionUseCaseRequest {
@@ -16,13 +16,13 @@ interface createQuestionUseCaseResponse {
 export class createQuestionUseCase {
 
 
-    constructor(private questionRepository: QuestionRepository) { }
+    constructor(private questionRepository: QuestionsRepository) { }
 
-    async execute({authorId, title, content}: createQuestionUseCaseRequest): Promise<createQuestionUseCaseResponse> {
+    async execute({ authorId, title, content }: createQuestionUseCaseRequest): Promise<createQuestionUseCaseResponse> {
 
         const question = Question.create({
-            authorId: new UniqueEntityId(authorId), 
-            title, 
+            authorId: new UniqueEntityId(authorId),
+            title,
             content
         })
 

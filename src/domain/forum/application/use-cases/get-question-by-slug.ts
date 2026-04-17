@@ -1,4 +1,4 @@
-import { type QuestionRepository } from "../../application/repositories/question-repository";
+import { type QuestionsRepository } from "../repositories/questions-repository";
 import type { Question } from "../../enterprise/entities/question";
 
 export interface getQuestionBySlugUseCaseRequest {
@@ -13,11 +13,11 @@ export interface getQuestionBySlugUseCaseResponse {
 
 export class getQuestionBySlugUseCase {
 
-    constructor(private questionRepository: QuestionRepository) {}
+    constructor(private questionRepository: QuestionsRepository) { }
 
     async execute({ slug }: getQuestionBySlugUseCaseRequest): Promise<getQuestionBySlugUseCaseResponse> {
-        
-        const question  = await this.questionRepository.findBySlug(slug);
+
+        const question = await this.questionRepository.findBySlug(slug);
 
         if (!question) {
             throw new Error("Question not found");
