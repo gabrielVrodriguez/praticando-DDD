@@ -1,4 +1,5 @@
 import type { AnswersRepository } from "@/domain/forum/application/repositories/answers-repository";
+import { type fetchQuestionAnswersUseCaseRequest } from "@/domain/forum/application/use-cases/fetch-question-answers";
 import { Answer } from "@/domain/forum/enterprise/entities/answer";
 
 
@@ -18,6 +19,12 @@ export class inMemoryAnswersRepository implements AnswersRepository {
         return answer;
     }
 
+    async findManyByQuestionId ({page, questionId}: fetchQuestionAnswersUseCaseRequest): Promise<Answer[]>{
+        const items = this.items.filter(item => item.questionId.toString() === questionId)
+        .slice((page - 1) * 20 , page * 20);
+        return items;
+    }
+
     async delete (answer: Answer): Promise<void> {
         const answerIndex = this.items.findIndex(item => item.id === answer.id);
         this.items.splice(answerIndex, 1);
@@ -30,6 +37,7 @@ export class inMemoryAnswersRepository implements AnswersRepository {
             this.items[answerIndex] = answer;
         }
     }
+    
 
 
 }
