@@ -3,7 +3,7 @@ import { type fetchQuestionAnswersUseCaseRequest } from "@/domain/forum/applicat
 import { Answer } from "@/domain/forum/enterprise/entities/answer";
 
 
-export class inMemoryAnswersRepository implements AnswersRepository {
+export class InMemoryAnswersRepository implements AnswersRepository {
 
     public items: Answer[] = [];
 

@@ -1,18 +1,18 @@
-import { inMemoryAnswersRepository } from '@/../test/repositories/in-memory-answers-repository';
+import { InMemoryAnswersRepository } from '@/../test/repositories/in-memory-answers-repository';
 import { editAnswerUseCase } from './edit-answer';
 
 import { makeAnswer } from 'test/factories/make-answer';
 import { UniqueEntityId } from '@/core/entities/unique-entity-id';
 
-let answersRepository: inMemoryAnswersRepository;
+let inMemoryAnswersRepository: InMemoryAnswersRepository;
 let sut: editAnswerUseCase;
 
 
 describe('edit a answer', () => {
 
     beforeEach(() => {
-        answersRepository = new inMemoryAnswersRepository();
-        sut = new editAnswerUseCase(answersRepository);
+        inMemoryAnswersRepository = new InMemoryAnswersRepository();
+        sut = new editAnswerUseCase(inMemoryAnswersRepository);
     })
 
     it('should be able to edit a answer', async () => {
@@ -21,9 +21,9 @@ describe('edit a answer', () => {
             authorId: new UniqueEntityId('author-id'),
         })
 
-        await answersRepository.create(newAnswer)
+        await inMemoryAnswersRepository.create(newAnswer)
 
-        const answer = await answersRepository.findById(newAnswer.id.toString());
+        const answer = await inMemoryAnswersRepository.findById(newAnswer.id.toString());
 
         if (!answer) {
             throw new Error('Answer not found');
@@ -45,7 +45,7 @@ describe('edit a answer', () => {
             authorId: new UniqueEntityId('author-id'),
         })
 
-        await answersRepository.create(newAnswer)
+        await inMemoryAnswersRepository.create(newAnswer)
 
         await expect(() =>
             sut.execute({
@@ -55,7 +55,7 @@ describe('edit a answer', () => {
             })
         ).rejects.toThrow("Not allowed to edit this answer");
 
-        expect(answersRepository.items).toHaveLength(1);
+        expect(inMemoryAnswersRepository.items).toHaveLength(1);
 
     })
 });

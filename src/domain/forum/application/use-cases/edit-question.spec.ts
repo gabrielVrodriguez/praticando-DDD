@@ -1,18 +1,18 @@
-import { inMemoryQuestionsRepository } from '@/../test/repositories/in-memory-questions-repository';
+import { InMemoryQuestionsRepository } from '@/../test/repositories/in-memory-questions-repository';
 import { editQuestionUseCase } from './edit-question';
 
 import { makeQuestion } from 'test/factories/make-question';
 import { UniqueEntityId } from '@/core/entities/unique-entity-id';
 
-let questionsRepository: inMemoryQuestionsRepository;
+let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
 let sut: editQuestionUseCase;
 
 
 describe('edit a question', () => {
 
     beforeEach(() => {
-        questionsRepository = new inMemoryQuestionsRepository();
-        sut = new editQuestionUseCase(questionsRepository);
+        inMemoryQuestionsRepository = new InMemoryQuestionsRepository();
+        sut = new editQuestionUseCase(inMemoryQuestionsRepository);
     })
 
     it('should be able to edit a question', async () => {
@@ -21,9 +21,9 @@ describe('edit a question', () => {
             authorId: new UniqueEntityId('author-id'),
         })
 
-        await questionsRepository.create(newQuestion)
+        await inMemoryQuestionsRepository.create(newQuestion)
 
-        const question = await questionsRepository.findById(newQuestion.id.toString());
+        const question = await inMemoryQuestionsRepository.findById(newQuestion.id.toString());
 
         if (!question) {
             throw new Error('Question not found');
@@ -47,7 +47,7 @@ describe('edit a question', () => {
             authorId: new UniqueEntityId('author-id'),
         })
 
-        await questionsRepository.create(newQuestion)
+        await inMemoryQuestionsRepository.create(newQuestion)
 
         await expect(() =>
             sut.execute({
@@ -58,7 +58,7 @@ describe('edit a question', () => {
             })
         ).rejects.toThrow("Not allowed to edit this question");
 
-        expect(questionsRepository.items).toHaveLength(1);
+        expect(inMemoryQuestionsRepository.items).toHaveLength(1);
 
     })
 });

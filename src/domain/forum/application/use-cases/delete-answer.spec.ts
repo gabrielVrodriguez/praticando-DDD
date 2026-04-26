@@ -1,18 +1,18 @@
-import { inMemoryAnswersRepository } from '@/../test/repositories/in-memory-answers-repository';
+import { InMemoryAnswersRepository } from '@/../test/repositories/in-memory-answers-repository';
 import { deleteAnswerUseCase } from './delete-answer';
 
 import { makeAnswer } from 'test/factories/make-answer';
 import { UniqueEntityId } from '@/core/entities/unique-entity-id';
 
-let answersRepository: inMemoryAnswersRepository;
+let inMemoryAnswersRepository: InMemoryAnswersRepository;
 let sut: deleteAnswerUseCase;
 
 
 describe('delete a answer', () => {
 
     beforeEach(() => {
-        answersRepository = new inMemoryAnswersRepository();
-        sut = new deleteAnswerUseCase(answersRepository);
+        inMemoryAnswersRepository = new InMemoryAnswersRepository();
+        sut = new deleteAnswerUseCase(inMemoryAnswersRepository);
     })
 
     it('should be able to delete a answer', async () => {
@@ -21,9 +21,9 @@ describe('delete a answer', () => {
             authorId: new UniqueEntityId('author-id'),
         })
 
-        await answersRepository.create(newAnswer)
+        await inMemoryAnswersRepository.create(newAnswer)
 
-        const answer = await answersRepository.findById(newAnswer.id.toString());
+        const answer = await inMemoryAnswersRepository.findById(newAnswer.id.toString());
 
         if (!answer) {
             throw new Error('Answer not found');
@@ -31,7 +31,7 @@ describe('delete a answer', () => {
 
         await sut.execute({answerId: answer.id.toString(), authorId: answer.authorId.toString()})
 
-        expect(answersRepository.items).toHaveLength(0);
+        expect(inMemoryAnswersRepository.items).toHaveLength(0);
 
     })
 
@@ -41,13 +41,13 @@ describe('delete a answer', () => {
             authorId: new UniqueEntityId('author-id'),
         })
 
-        await answersRepository.create(newAnswer)
+        await inMemoryAnswersRepository.create(newAnswer)
 
         await expect(() =>
             sut.execute({answerId: newAnswer.id.toString(), authorId: 'different-author-id'})
         ).rejects.toThrow("Not allowed to delete this answer");
 
-        expect(answersRepository.items).toHaveLength(1);
+        expect(inMemoryAnswersRepository.items).toHaveLength(1);
 
     })
 });

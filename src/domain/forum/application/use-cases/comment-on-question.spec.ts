@@ -1,25 +1,25 @@
-import { inMemoryQuestionsRepository } from '@/../test/repositories/in-memory-questions-repository';
+import { InMemoryQuestionsRepository } from '@/../test/repositories/in-memory-questions-repository';
 import { commentOnQuestionUseCase } from './comment-on-question';
 import { InMemoryQuestionCommentsRepository } from 'test/repositories/in-memory-question-comments-repository';
 import { makeQuestion } from 'test/factories/make-question';
 
-let questionsRepository: inMemoryQuestionsRepository;
-let commentOnQuestionRepository: InMemoryQuestionCommentsRepository;
+let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
+let inMemoryQuestionCommentsRepository: InMemoryQuestionCommentsRepository;
 
 let sut: commentOnQuestionUseCase;
 
 describe('comment on question', () => {
     
     beforeEach(() => {
-        questionsRepository = new inMemoryQuestionsRepository();
-        commentOnQuestionRepository = new InMemoryQuestionCommentsRepository();
-        sut = new commentOnQuestionUseCase(questionsRepository, commentOnQuestionRepository);
+        inMemoryQuestionsRepository = new InMemoryQuestionsRepository();
+        inMemoryQuestionCommentsRepository = new InMemoryQuestionCommentsRepository();
+        sut = new commentOnQuestionUseCase(inMemoryQuestionsRepository, inMemoryQuestionCommentsRepository);
     })
 
     it('should be able to coment on  question', async () => {
 
         const question = makeQuestion();
-        await questionsRepository.create(question);
+        await inMemoryQuestionsRepository.create(question);
 
         await sut.execute({
             authorId: 'gabriel',
@@ -27,8 +27,8 @@ describe('comment on question', () => {
             content: 'This is a comment'
          })
 
-         expect(commentOnQuestionRepository.items[0]).toBeTruthy();
-         expect(commentOnQuestionRepository.items[0]!.content).toBe('This is a comment');
+         expect(inMemoryQuestionCommentsRepository.items[0]).toBeTruthy();
+         expect(inMemoryQuestionCommentsRepository.items[0]!.content).toBe('This is a comment');
         })  
 
 

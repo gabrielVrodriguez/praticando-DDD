@@ -25,8 +25,10 @@ export class InMemoryQuestionCommentsRepository implements QuestionCommentsRepos
         
     }
     async findById(id: string): Promise<QuestionComment | null> {
-        throw new Error("Method not implemented.");
+        const questionComment = this.items.find(item => item.id.toString() === id);
+        return questionComment ?? null;
     }
+    
     async findManyByQuestionId(questionId: string): Promise<QuestionComment[]> {
         throw new Error("Method not implemented.");
     }

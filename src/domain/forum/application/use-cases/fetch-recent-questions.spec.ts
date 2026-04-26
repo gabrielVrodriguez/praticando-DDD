@@ -1,17 +1,17 @@
-import { inMemoryQuestionsRepository } from '@/../test/repositories/in-memory-questions-repository';
+import { InMemoryQuestionsRepository } from '@/../test/repositories/in-memory-questions-repository';
 import { fetchRecentQuestionsUseCase } from './fetch-recent-questions';
 import { makeQuestion } from 'test/factories/make-question';
 import { Slug } from '../../enterprise/entities/value-objects/slug';
 
-let questionsRepository: inMemoryQuestionsRepository;
+let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
 let sut: fetchRecentQuestionsUseCase;
 
 
 describe('fetch recent questions', () => {
 
     beforeEach(() => {
-        questionsRepository = new inMemoryQuestionsRepository();
-        sut = new fetchRecentQuestionsUseCase(questionsRepository);
+        inMemoryQuestionsRepository = new InMemoryQuestionsRepository();
+        sut = new fetchRecentQuestionsUseCase(inMemoryQuestionsRepository);
     })
 
     it('should be able to fetch recent questions', async () => {
@@ -20,7 +20,7 @@ describe('fetch recent questions', () => {
             slug: Slug.create('this-is-a-question')
         })
 
-        await questionsRepository.create(newQuestion)
+        await inMemoryQuestionsRepository.create(newQuestion)
 
         const { questions } = await sut.execute({ page: 1 })
 
@@ -30,11 +30,11 @@ describe('fetch recent questions', () => {
 
     it('should be able to fetch recent questions and sort them', async () => {
 
-        await questionsRepository.create(makeQuestion({ createdAt: new Date(2025, 0, 20) }))
-        await questionsRepository.create(makeQuestion({ createdAt: new Date(2025, 2, 20) }))
-        await questionsRepository.create(makeQuestion({ createdAt: new Date(2026, 0, 20) }))
-        await questionsRepository.create(makeQuestion({ createdAt: new Date(2027, 0, 20) }))
-        await questionsRepository.create(makeQuestion({ createdAt: new Date(2028, 0, 20) }))
+        await inMemoryQuestionsRepository.create(makeQuestion({ createdAt: new Date(2025, 0, 20) }))
+        await inMemoryQuestionsRepository.create(makeQuestion({ createdAt: new Date(2025, 2, 20) }))
+        await inMemoryQuestionsRepository.create(makeQuestion({ createdAt: new Date(2026, 0, 20) }))
+        await inMemoryQuestionsRepository.create(makeQuestion({ createdAt: new Date(2027, 0, 20) }))
+        await inMemoryQuestionsRepository.create(makeQuestion({ createdAt: new Date(2028, 0, 20) }))
 
 
         const { questions } = await sut.execute({ page: 1 })
@@ -52,7 +52,7 @@ describe('fetch recent questions', () => {
      it('should be able to fetch paginated recent questions ', async () => {
 
        for ( let i = 1; i<= 22; i ++) {
-        await questionsRepository.create(makeQuestion({ createdAt: new Date(2025, 0, i) }))
+        await inMemoryQuestionsRepository.create(makeQuestion({ createdAt: new Date(2025, 0, i) }))
        }
 
 
