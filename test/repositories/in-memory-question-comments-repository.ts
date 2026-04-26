@@ -1,0 +1,34 @@
+import type { QuestionCommentsRepository } from "@/domain/forum/application/repositories/question-comments-repository";
+import { QuestionComment } from "@/domain/forum/enterprise/entities/question-comment";
+
+
+
+
+
+
+export class InMemoryQuestionCommentsRepository implements QuestionCommentsRepository{
+
+    public items: QuestionComment[] = [];
+
+    async create(questionComment: QuestionComment): Promise<QuestionComment> {
+       this.items.push(questionComment);
+        return questionComment;
+    }
+
+    async delete(questionComment: QuestionComment): Promise<void> {
+        const questionCommentIdx = this.items.findIndex(item => item.id === questionComment.id);
+
+        if (questionCommentIdx !== -1) {
+            this.items.splice(questionCommentIdx, 1);
+        }
+
+        
+    }
+    async findById(id: string): Promise<QuestionComment | null> {
+        throw new Error("Method not implemented.");
+    }
+    async findManyByQuestionId(questionId: string): Promise<QuestionComment[]> {
+        throw new Error("Method not implemented.");
+    }
+    
+}
