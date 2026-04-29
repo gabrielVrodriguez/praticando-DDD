@@ -1,3 +1,4 @@
+import type { PaginationParams } from "@/core/repositories/pagination.params";
 import type { AnswerCommentsRepository } from "@/domain/forum/application/repositories/answer-comments-repository";
 import { AnswerComment } from "@/domain/forum/enterprise/entities/answer-comment";
 
@@ -25,10 +26,14 @@ export class InMemoryAnswerCommentsRepository implements AnswerCommentsRepositor
         
     }
     async findById(id: string): Promise<AnswerComment | null> {
-        throw new Error("Method not implemented.");
+        const answerComment = this.items.find(item => item.id.toString() === id);
+        return answerComment ?? null;
     }
-    async findManyByAnswerId(answerId: string): Promise<AnswerComment[]> {
-        throw new Error("Method not implemented.");
-    }
+
+    async findManyByAnswerId(answerId: string, {page}: PaginationParams): Promise<AnswerComment[]> {
+            const items = this.items.filter(item => item.answerId.toString() === answerId)
+                .slice((page - 1) * 20, page * 20);
+            return items;
+        }
     
 }

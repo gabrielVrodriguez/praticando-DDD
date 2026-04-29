@@ -7,7 +7,7 @@ let inMemoryQuestionCommentsRepository: InMemoryQuestionCommentsRepository;
 let sut: deleteQuestionCommentUseCase;
 
 describe('delete question comment', () => {
-    
+
     beforeEach(() => {
         inMemoryQuestionCommentsRepository = new InMemoryQuestionCommentsRepository();
         sut = new deleteQuestionCommentUseCase(inMemoryQuestionCommentsRepository);
@@ -15,17 +15,31 @@ describe('delete question comment', () => {
 
     it('should be able to delete a question comment', async () => {
 
-        const questionComment = makeQuestionComment({authorId: new UniqueEntityId('gabriel')});
+        const questionComment = makeQuestionComment({ authorId: new UniqueEntityId('gabriel') });
         await inMemoryQuestionCommentsRepository.create(questionComment);
 
         await sut.execute({
             authorId: 'gabriel',
             questionCommentId: questionComment.id.toString(),
-         })
+        })
 
-         expect(inMemoryQuestionCommentsRepository.items[0]).toBeFalsy();
-        })  
+        expect(inMemoryQuestionCommentsRepository.items[0]).toBeFalsy();
+    })
 
 
-    
+    it('should not be able to delete another user question comment', async () => {
+
+        const questionComment = makeQuestionComment({ authorId: new UniqueEntityId('gabriel') });
+        await inMemoryQuestionCommentsRepository.create(questionComment);
+
+        await expect(
+            sut.execute({
+                authorId: 'john',
+                questionCommentId: questionComment.id.toString(),
+            })
+        ).rejects.toThrow("Not allowed to delete this question comment");
+
+
+    })
+
 });

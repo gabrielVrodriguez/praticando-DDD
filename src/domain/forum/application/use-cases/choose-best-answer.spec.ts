@@ -42,13 +42,13 @@ describe('Choose Best Answer', () => {
         await inMemoryQuestionsRepository.create(newQuestion);
         await inMemoryAnswersRepository.create(answer);
 
-        expect(() =>
+        await expect(
             sut.execute(
                 {
                     authorId: answer.authorId.toString(),
                     answerId: answer.id.toString()
-                })).rejects.toThrow("Not allowed to choose this answer as best");
-
+                })
+        ).rejects.toThrow("Not allowed to choose this answer as best");
 
 
     })
