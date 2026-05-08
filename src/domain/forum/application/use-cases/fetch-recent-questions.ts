@@ -1,16 +1,13 @@
 import { type QuestionsRepository } from "../repositories/questions-repository";
 import type { Question } from "../../enterprise/entities/question";
-import type { getQuestionBySlugUseCaseResponse } from "./get-question-by-slug";
+import { right, type Either } from "@/core/either";
 
 export interface fetchRecentQuestionsUseCaseRequest {
     page: number;
 }
 
-export interface fetchRecentQuestionsUseCaseResponse {
-    questions: Question[];
-}
+export type fetchRecentQuestionsUseCaseResponse = Either<null, { questions: Question[] }>;
 
-// :Promise<getQuestionBySlugUseCaseResponse>
 
 export class fetchRecentQuestionsUseCase {
 
@@ -18,12 +15,8 @@ export class fetchRecentQuestionsUseCase {
 
     async execute({ page }: fetchRecentQuestionsUseCaseRequest): Promise<fetchRecentQuestionsUseCaseResponse> {
 
-        const questions = await this.questionRepository.findManyRecent( { page });
+        const questions = await this.questionRepository.findManyRecent({ page });
 
-        if (!questions) {
-            throw new Error("Questions not found");
-        }
-
-        return { questions }
+        return right({ questions });
     }
 }

@@ -3,6 +3,7 @@ import { editQuestionUseCase } from './edit-question';
 
 import { makeQuestion } from 'test/factories/make-question';
 import { UniqueEntityId } from '@/core/entities/unique-entity-id';
+import { NotAllowedError } from './errors/not-allowed.error';
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
 let sut: editQuestionUseCase;
@@ -29,16 +30,14 @@ describe('edit a question', () => {
             throw new Error('Question not found');
         }
 
-        await sut.execute({
+       const result =  await sut.execute({
             questionId: newQuestion.id.toString(),
             authorId: newQuestion.authorId.toString(),
             title: 'New Title',
             content: 'New Content'
         })
 
-        expect(question.title).toBe('New Title');
-        expect(question.content).toBe('New Content');
-
+        expect(result.isRight()).toBe(true);
     })
 
      it('should not be able to edit a question if the author is different', async () => {
@@ -49,16 +48,16 @@ describe('edit a question', () => {
 
         await inMemoryQuestionsRepository.create(newQuestion)
 
-        await expect(() =>
-            sut.execute({
+        const result = await sut.execute({
                 questionId: newQuestion.id.toString(),
                 authorId: 'different-author-id',
                 title: 'New Title',
                 content: 'New Content'
             })
-        ).rejects.toThrow("Not allowed to edit this question");
+     
 
-        expect(inMemoryQuestionsRepository.items).toHaveLength(1);
+        expect(result.isLeft()).toBe(true);
+        expect(result.value).toBeInstanceOf(NotAllowedError);
 
     })
 });

@@ -19,14 +19,14 @@ describe('fetch answer comments', () => {
 
         for (let i = 1; i <= 22; i++) {
             await inMemoryCommentsRepository.create(makeAnswerComment(
-                { answerId: new UniqueEntityId('answer-fetch')}
+                { answerId: new UniqueEntityId('answer-fetch') }
             ))
         }
 
-        const { answerComments } = await sut.execute({ page: 1, answerId: 'answer-fetch' })
+         const result = await sut.execute({ page: 1, answerId: 'answer-fetch' })
 
-        expect(answerComments).toBeTruthy();
-        expect(answerComments).toHaveLength(20);
+        expect(result.isRight()).toBe(true);
+        expect(result.value?.answerComments).toHaveLength(20);
 
     })
 
@@ -34,14 +34,13 @@ describe('fetch answer comments', () => {
 
         for (let i = 1; i <= 22; i++) {
             await inMemoryCommentsRepository.create(makeAnswerComment(
-                { answerId: new UniqueEntityId('answer-fetch')}
+                { answerId: new UniqueEntityId('answer-fetch') }
             ))
         }
 
-        const { answerComments } = await sut.execute({ page: 2, answerId: 'answer-fetch' })
+        const result = await sut.execute({ page: 2, answerId: 'answer-fetch' })
 
-        expect(answerComments).toBeTruthy();
-        expect(answerComments).toHaveLength(2);
-        
+        expect(result.isRight()).toBe(true);
+        expect(result.value?.answerComments).toHaveLength(2);
     })
 });

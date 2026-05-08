@@ -1,16 +1,14 @@
 import type { QuestionCommentsRepository } from "../../application/repositories/question-comments-repository";
 import type { QuestionComment } from "../../enterprise/entities/question-comment";
+import { right, type Either } from "@/core/either";
 
 export interface fetchQuestionCommentsUseCaseRequest {
-   page: number;
-   questionId: string;
+    page: number;
+    questionId: string;
 }
 
-export interface fetchQuestionCommentsUseCaseResponse {
-    questionComments: QuestionComment[];
-}
+export type fetchQuestionCommentsUseCaseResponse = Either<null, { questionComments: QuestionComment[] }>;
 
-// :Promise<getAnswerBySlugUseCaseResponse>
 
 export class fetchQuestionCommentsUseCase {
 
@@ -20,10 +18,6 @@ export class fetchQuestionCommentsUseCase {
 
         const questionComments = await this.questionCommentRepository.findManyByQuestionId(questionId, { page });
 
-        if (!questionComments) {
-            throw new Error("Question comments not found");
-        }
-
-        return { questionComments: questionComments }
+        return right({ questionComments });
     }
 }

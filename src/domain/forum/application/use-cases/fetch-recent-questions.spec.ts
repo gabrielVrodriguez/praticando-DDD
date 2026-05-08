@@ -22,10 +22,10 @@ describe('fetch recent questions', () => {
 
         await inMemoryQuestionsRepository.create(newQuestion)
 
-        const { questions } = await sut.execute({ page: 1 })
+        const result = await sut.execute({ page: 1 })
 
-        expect(questions).toBeTruthy();
-        expect(questions[0]?.authorId.toString()).toBe(newQuestion.authorId.toString());
+        expect(result.isRight()).toBe(true);
+        expect(result.value?.questions[0]?.authorId.toString()).toBe(newQuestion.authorId.toString());
     })
 
     it('should be able to fetch recent questions and sort them', async () => {
@@ -37,15 +37,13 @@ describe('fetch recent questions', () => {
         await inMemoryQuestionsRepository.create(makeQuestion({ createdAt: new Date(2028, 0, 20) }))
 
 
-        const { questions } = await sut.execute({ page: 1 })
+        const result = await sut.execute({ page: 1 })
 
-        if (!questions) {
-            throw new Error("Questions not found");
-        }
+        
 
-        expect(questions).toBeTruthy();
-        expect(questions).toHaveLength(5);
-        expect(questions[0]!.createdAt).toEqual(new Date(2028, 0, 20));
+        expect(result.isRight()).toBe(true);
+        expect(result.value?.questions).toHaveLength(5);
+        expect(result.value?.questions[0]!.createdAt).toEqual(new Date(2028, 0, 20));
     })  
 
 
@@ -56,13 +54,9 @@ describe('fetch recent questions', () => {
        }
 
 
-        const { questions } = await sut.execute({ page: 2 })
+        const result = await sut.execute({ page: 2 })
 
-        if (!questions) {
-            throw new Error("Questions not found");
-        }
-
-        expect(questions).toBeTruthy();
-        expect(questions).toHaveLength(2);
+        expect(result.isRight()).toBe(true);
+        expect(result.value?.questions).toHaveLength(2);
     })  
 });

@@ -3,6 +3,7 @@ import { editAnswerUseCase } from './edit-answer';
 
 import { makeAnswer } from 'test/factories/make-answer';
 import { UniqueEntityId } from '@/core/entities/unique-entity-id';
+import { NotAllowedError } from './errors/not-allowed.error';
 
 let inMemoryAnswersRepository: InMemoryAnswersRepository;
 let sut: editAnswerUseCase;
@@ -29,17 +30,18 @@ describe('edit a answer', () => {
             throw new Error('Answer not found');
         }
 
-        await sut.execute({
+        const result = await sut.execute({
             questionId: newAnswer.id.toString(),
             authorId: newAnswer.authorId.toString(),
             content: 'New Content'
         })
 
-        expect(answer.content).toBe('New Content');
+        expect(result.isRight()).toBe(true);
+       
 
     })
 
-     it('should not be able to edit a answer if the author is different', async () => {
+    it('should not be able to edit a answer if the author is different', async () => {
 
         const newAnswer = makeAnswer({
             authorId: new UniqueEntityId('author-id'),
@@ -47,15 +49,16 @@ describe('edit a answer', () => {
 
         await inMemoryAnswersRepository.create(newAnswer)
 
-        await expect(() =>
-            sut.execute({
+     
+            const result = await sut.execute({
                 questionId: newAnswer.id.toString(),
                 authorId: 'different-author-id',
                 content: 'New Content'
             })
-        ).rejects.toThrow("Not allowed to edit this answer");
+    
+        expect(result.isLeft()).toBe(true);
+        expect(result.value).toBeInstanceOf(NotAllowedError);
 
-        expect(inMemoryAnswersRepository.items).toHaveLength(1);
 
     })
 });

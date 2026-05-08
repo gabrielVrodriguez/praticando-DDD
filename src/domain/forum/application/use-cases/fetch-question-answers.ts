@@ -1,16 +1,14 @@
 import { type AnswersRepository } from "../repositories/answers-repository";
 import type { Answer } from "../../enterprise/entities/answer";
+import { right, type Either } from "@/core/either";
 
 export interface fetchQuestionAnswersUseCaseRequest {
-   page: number;
-   questionId: string;
+    page: number;
+    questionId: string;
 }
 
-export interface fetchQuestionAnswersUseCaseResponse {
-    answers: Answer[];
-}
+export type fetchQuestionAnswersUseCaseResponse = Either<null, { answers: Answer[] }>;
 
-// :Promise<getAnswerBySlugUseCaseResponse>
 
 export class fetchQuestionAnswersUseCase {
 
@@ -20,10 +18,6 @@ export class fetchQuestionAnswersUseCase {
 
         const answers = await this.answerRepository.findManyByQuestionId({ page, questionId });
 
-        if (!answers) {
-            throw new Error("Answers not found");
-        }
-
-        return { answers }
+        return right({ answers });
     }
 }

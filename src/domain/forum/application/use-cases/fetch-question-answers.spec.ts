@@ -23,10 +23,10 @@ describe('fetch question answers', () => {
             ))
         }
 
-        const { answers } = await sut.execute({ page: 1, questionId: 'question-fetch' })
+        const result = await sut.execute({ page: 1, questionId: 'question-fetch' })
 
-        expect(answers).toBeTruthy();
-        expect(answers).toHaveLength(20);
+        expect(result.isRight()).toBe(true);
+        expect(result.value?.answers).toHaveLength(20);
 
     })
 
@@ -38,10 +38,10 @@ describe('fetch question answers', () => {
             ))
         }
 
-        const { answers } = await sut.execute({ page: 2, questionId: 'question-fetch' })
+        const result = await sut.execute({ page: 2, questionId: 'question-fetch' })
 
-        expect(answers).toBeTruthy();
-        expect(answers).toHaveLength(2);
+        expect(result.isRight()).toBe(true);
+        expect(result.value?.answers).toHaveLength(2);
         
     })
 });

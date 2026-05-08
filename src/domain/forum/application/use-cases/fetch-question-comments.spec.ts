@@ -23,10 +23,10 @@ describe('fetch question comments', () => {
             ))
         }
 
-        const { questionComments } = await sut.execute({ page: 1, questionId: 'question-fetch' })
+         const result = await sut.execute({ page: 1, questionId: 'question-fetch' })
 
-        expect(questionComments).toBeTruthy();
-        expect(questionComments).toHaveLength(20);
+        expect(result.isRight()).toBe(true);
+        expect(result.value?.questionComments).toHaveLength(20);
 
     })
 
@@ -38,10 +38,10 @@ describe('fetch question comments', () => {
             ))
         }
 
-        const { questionComments } = await sut.execute({ page: 2, questionId: 'question-fetch' })
+       const result = await sut.execute({ page: 2, questionId: 'question-fetch' })
 
-        expect(questionComments).toBeTruthy();
-        expect(questionComments).toHaveLength(2);
+        expect(result.isRight()).toBe(true);
+        expect(result.value?.questionComments).toHaveLength(2);
         
     })
 });

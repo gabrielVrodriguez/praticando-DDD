@@ -43,10 +43,9 @@ describe('delete a question', () => {
 
         await inMemoryQuestionsRepository.create(newQuestion)
 
-        await expect(() =>
-            sut.execute({questionId: newQuestion.id.toString(), authorId: 'different-author-id'})
-        ).rejects.toThrow("Not allowed to delete this question");
+        const result = await sut.execute({questionId: newQuestion.id.toString(), authorId: 'different-author-id'})
 
+        expect(result.isLeft()).toBe(true);
         expect(inMemoryQuestionsRepository.items).toHaveLength(1);
 
     })

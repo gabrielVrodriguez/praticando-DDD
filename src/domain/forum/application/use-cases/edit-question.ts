@@ -1,5 +1,7 @@
 import type { QuestionsRepository } from "../repositories/questions-repository";
-
+import {right, left, type Either } from "@/core/either.js";
+import { ResourceNotFoundError } from "./errors/resource-not-found.error";
+import { NotAllowedError } from "./errors/not-allowed.error";
 
 export interface editQuestionUseCaseRequest {
     authorId: string;
@@ -8,9 +10,9 @@ export interface editQuestionUseCaseRequest {
     content: string;
 }
 
-export interface editQuestionUseCaseResponse {
+export type editQuestionUseCaseResponse = Either<ResourceNotFoundError | NotAllowedError, {}>;
 
-}
+
 
 
 export class editQuestionUseCase {
@@ -22,11 +24,11 @@ export class editQuestionUseCase {
         const question = await this.questionRepository.findById(questionId);
 
         if (!question) {
-            throw new Error("Question not found");
+            return left(new ResourceNotFoundError());
         }
 
         if (authorId !== question.authorId.toString()) {
-            throw new Error("Not allowed to edit this question");
+            return left(new NotAllowedError());
         }
 
         question.title = title;
@@ -34,7 +36,7 @@ export class editQuestionUseCase {
 
         await this.questionRepository.save(question);
 
-        return {};
+        return right({});
     }
 
 }

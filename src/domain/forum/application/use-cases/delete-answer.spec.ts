@@ -3,6 +3,7 @@ import { deleteAnswerUseCase } from './delete-answer';
 
 import { makeAnswer } from 'test/factories/make-answer';
 import { UniqueEntityId } from '@/core/entities/unique-entity-id';
+import { NotAllowedError } from './errors/not-allowed.error';
 
 let inMemoryAnswersRepository: InMemoryAnswersRepository;
 let sut: deleteAnswerUseCase;
@@ -29,9 +30,9 @@ describe('delete a answer', () => {
             throw new Error('Answer not found');
         }
 
-        await sut.execute({answerId: answer.id.toString(), authorId: answer.authorId.toString()})
+       const result = await sut.execute({answerId: answer.id.toString(), authorId: answer.authorId.toString()})
 
-        expect(inMemoryAnswersRepository.items).toHaveLength(0);
+        expect(result.isRight()).toBe(true);
 
     })
 
@@ -43,11 +44,10 @@ describe('delete a answer', () => {
 
         await inMemoryAnswersRepository.create(newAnswer)
 
-        await expect(() =>
-            sut.execute({answerId: newAnswer.id.toString(), authorId: 'different-author-id'})
-        ).rejects.toThrow("Not allowed to delete this answer");
-
-        expect(inMemoryAnswersRepository.items).toHaveLength(1);
+        const result = await sut.execute({answerId: newAnswer.id.toString(), authorId: 'different-author-id'})
+        
+        expect(result.isLeft()).toBe(true);
+        expect(result.value).toBeInstanceOf(NotAllowedError);
 
     })
 });
