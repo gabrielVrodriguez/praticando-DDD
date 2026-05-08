@@ -16,11 +16,14 @@ describe('create a question', () => {
         const result = await sut.execute({
             authorId: 'instructor-id',
             title: 'This is a question',
-            content: 'This is the content of the question'
+            content: 'This is the content of the question',
+            attachmentsIds: ['1', '2']
+
         });
 
         expect(result.isRight()).toBe(true);
         expect(result.value?.question.content).toBe('This is the content of the question');
+        expect(inMemoryQuestionsRepository.items[0]?.attachments).toHaveLength(2);
 
     })
 });
