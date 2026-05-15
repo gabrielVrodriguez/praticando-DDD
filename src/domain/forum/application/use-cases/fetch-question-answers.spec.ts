@@ -2,8 +2,10 @@ import { InMemoryAnswersRepository } from '@/../test/repositories/in-memory-answ
 import { fetchQuestionAnswersUseCase } from './fetch-question-answers';
 import { makeAnswer } from 'test/factories/make-answer';
 import { UniqueEntityId } from '@/core/entities/unique-entity-id';
+import { InMemoryAnswerAttachmentsRepository } from 'test/repositories/in-memory-answer-attachments.repository';
 
 let inMemoryAnswersRepository: InMemoryAnswersRepository;
+let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository;
 let sut: fetchQuestionAnswersUseCase;
 
 describe('fetch question answers', () => {
@@ -11,7 +13,8 @@ describe('fetch question answers', () => {
 
 
     beforeEach(async () => {
-        inMemoryAnswersRepository = new InMemoryAnswersRepository();
+        inMemoryAnswerAttachmentsRepository = new InMemoryAnswerAttachmentsRepository();
+        inMemoryAnswersRepository = new InMemoryAnswersRepository(inMemoryAnswerAttachmentsRepository);
         sut = new fetchQuestionAnswersUseCase(inMemoryAnswersRepository);
     })
 
@@ -19,7 +22,7 @@ describe('fetch question answers', () => {
 
         for (let i = 1; i <= 22; i++) {
             await inMemoryAnswersRepository.create(makeAnswer(
-                { questionId: new UniqueEntityId('question-fetch')}
+                { questionId: new UniqueEntityId('question-fetch') }
             ))
         }
 
@@ -34,7 +37,7 @@ describe('fetch question answers', () => {
 
         for (let i = 1; i <= 22; i++) {
             await inMemoryAnswersRepository.create(makeAnswer(
-                { questionId: new UniqueEntityId('question-fetch')}
+                { questionId: new UniqueEntityId('question-fetch') }
             ))
         }
 
@@ -42,6 +45,6 @@ describe('fetch question answers', () => {
 
         expect(result.isRight()).toBe(true);
         expect(result.value?.answers).toHaveLength(2);
-        
+
     })
 });

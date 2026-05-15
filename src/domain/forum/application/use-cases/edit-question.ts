@@ -1,13 +1,19 @@
 import type { QuestionsRepository } from "../repositories/questions-repository";
-import {right, left, type Either } from "@/core/either.js";
+import { right, left, type Either } from "@/core/either.js";
 import { ResourceNotFoundError } from "./errors/resource-not-found.error";
 import { NotAllowedError } from "./errors/not-allowed.error";
+import type { QuestionAttachmentsRepository } from "../repositories/question-attachments.repository";
+import { QuestionAttachmentList } from "../../enterprise/entities/question-attachment-list";
+import { QuestionAttachment } from "../../enterprise/entities/question-attachment";
+import { UniqueEntityId } from "@/core/entities/unique-entity-id.js";
+
 
 export interface editQuestionUseCaseRequest {
     authorId: string;
     questionId: string;
     title: string;
     content: string;
+    attachmentsIds: string[];
 }
 
 export type editQuestionUseCaseResponse = Either<ResourceNotFoundError | NotAllowedError, {}>;
@@ -17,9 +23,13 @@ export type editQuestionUseCaseResponse = Either<ResourceNotFoundError | NotAllo
 
 export class editQuestionUseCase {
 
-    constructor(private questionRepository: QuestionsRepository) { }
+    constructor(
+        private questionRepository: QuestionsRepository,
+        private questionAttachmentRepository: QuestionAttachmentsRepository
+    ) { }
 
-    async execute({ questionId, authorId, title, content }: editQuestionUseCaseRequest): Promise<editQuestionUseCaseResponse> {
+    async execute({ questionId, authorId, title, content, attachmentsIds
+    }: editQuestionUseCaseRequest): Promise<editQuestionUseCaseResponse> {
 
         const question = await this.questionRepository.findById(questionId);
 
@@ -30,6 +40,20 @@ export class editQuestionUseCase {
         if (authorId !== question.authorId.toString()) {
             return left(new NotAllowedError());
         }
+
+        const currentQuestionAttachments = await this.questionAttachmentRepository.findManyByQuestionId(questionId);
+
+        const questionAttachmentList = new QuestionAttachmentList(currentQuestionAttachments);
+
+        const questionAttachments = attachmentsIds.map(attachmentId => {
+            return QuestionAttachment.create({
+                attachmentId: new UniqueEntityId(attachmentId),
+                questionId: question.id
+            })
+        })
+
+        questionAttachmentList.update(questionAttachments);
+        question.attachments = questionAttachmentList;
 
         question.title = title;
         question.content = content;

@@ -1,11 +1,16 @@
 import type { AnswersRepository } from "@/domain/forum/application/repositories/answers-repository";
 import { type fetchQuestionAnswersUseCaseRequest } from "@/domain/forum/application/use-cases/fetch-question-answers";
 import { Answer } from "@/domain/forum/enterprise/entities/answer";
+import type { AnswerAttachmentsRepository } from "@/domain/forum/application/repositories/answer-attachments.repository";
 
 
 export class InMemoryAnswersRepository implements AnswersRepository {
 
     public items: Answer[] = [];
+
+    constructor(
+        private answerAttachmentsRepository: AnswerAttachmentsRepository
+    ) {}
 
     async create(answer: Answer): Promise<void> {
         this.items.push(answer);
@@ -28,6 +33,8 @@ export class InMemoryAnswersRepository implements AnswersRepository {
     async delete (answer: Answer): Promise<void> {
         const answerIndex = this.items.findIndex(item => item.id === answer.id);
         this.items.splice(answerIndex, 1);
+
+        await this.answerAttachmentsRepository.deleteManyByAnswerId(answer.id.toString());
     }
 
     async save (answer: Answer): Promise<void> {

@@ -4,11 +4,15 @@ import { InMemoryAnswersRepository } from "test/repositories/in-memory-answers-r
 import { InMemoryQuestionsRepository } from "test/repositories/in-memory-questions-repository";
 import { makeAnswer } from "test/factories/make-answer";
 import { NotAllowedError } from "./errors/not-allowed.error";
+import { InMemoryQuestionAttachmentsRepository } from 'test/repositories/in-memory-question-attachments.repository';
+import { InMemoryAnswerAttachmentsRepository } from "test/repositories/in-memory-answer-attachments.repository";
 
 
 
 let inMemoryAnswersRepository: InMemoryAnswersRepository;
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
+let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository;
+let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository;
 let sut: ChooseBestAnswerUseCase;
 
 
@@ -16,8 +20,10 @@ describe('Choose Best Answer', () => {
 
 
     beforeEach(() => {
-        inMemoryAnswersRepository = new InMemoryAnswersRepository();
-        inMemoryQuestionsRepository = new InMemoryQuestionsRepository();
+        inMemoryAnswerAttachmentsRepository = new InMemoryAnswerAttachmentsRepository();
+        inMemoryAnswersRepository = new InMemoryAnswersRepository(inMemoryAnswerAttachmentsRepository);
+        inMemoryQuestionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository();
+        inMemoryQuestionsRepository = new InMemoryQuestionsRepository(inMemoryQuestionAttachmentsRepository);
         sut = new ChooseBestAnswerUseCase(inMemoryAnswersRepository, inMemoryQuestionsRepository);
     })
 
