@@ -1,15 +1,15 @@
 import { InMemoryAnswersRepository } from '@/../test/repositories/in-memory-answers-repository';
-import { editAnswerUseCase } from './edit-answer';
+import { EditAnswerUseCase } from './edit-answer';
 
 import { makeAnswer } from 'test/factories/make-answer';
 import { UniqueEntityId } from '@/core/entities/unique-entity-id';
-import { NotAllowedError } from './errors/not-allowed.error';
+import { NotAllowedError } from '../../../../core/errors/not-allowed.error';
 import { InMemoryAnswerAttachmentsRepository } from 'test/repositories/in-memory-answer-attachments.repository';
 import { makeAnswerAttachment } from 'test/factories/make-answer-attachment';
 
 
 let inMemoryAnswersRepository: InMemoryAnswersRepository;
-let sut: editAnswerUseCase;
+let sut: EditAnswerUseCase;
 let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentsRepository;
 
 describe('edit a answer', () => {
@@ -18,7 +18,7 @@ describe('edit a answer', () => {
         inMemoryAnswerAttachmentsRepository = new InMemoryAnswerAttachmentsRepository();
         inMemoryAnswersRepository = new InMemoryAnswersRepository(inMemoryAnswerAttachmentsRepository);
 
-        sut = new editAnswerUseCase(inMemoryAnswersRepository, inMemoryAnswerAttachmentsRepository);
+        sut = new EditAnswerUseCase(inMemoryAnswersRepository, inMemoryAnswerAttachmentsRepository);
     })
 
     it('should be able to edit a answer', async () => {

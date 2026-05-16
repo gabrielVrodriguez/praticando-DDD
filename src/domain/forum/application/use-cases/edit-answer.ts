@@ -1,30 +1,30 @@
 import type { AnswersRepository } from "../repositories/answers-repository";
 import { right, left, type Either } from "@/core/either.js";
-import { ResourceNotFoundError } from "./errors/resource-not-found.error";
-import { NotAllowedError } from "./errors/not-allowed.error";
+import { ResourceNotFoundError } from "../../../../core/errors/resource-not-found.error";
+import { NotAllowedError } from "../../../../core/errors/not-allowed.error";
 import { AnswerAttachmentList } from "../../enterprise/entities/answer-attachment-list";
 import type { AnswerAttachmentsRepository } from "../repositories/answer-attachments.repository";
 import { AnswerAttachment } from "../../enterprise/entities/answer-attachment";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.js";
 
-export interface editAnswerUseCaseRequest {
+export interface EditAnswerUseCaseRequest {
     authorId: string;
     questionId: string;
     content: string;
     attachmentsIds: string[];
 }
 
-export type editAnswerUseCaseResponse = Either<ResourceNotFoundError | NotAllowedError, {}>;
+export type EditAnswerUseCaseResponse = Either<ResourceNotFoundError | NotAllowedError, {}>;
 
 
-export class editAnswerUseCase {
+export class EditAnswerUseCase {
 
     constructor(
         private answerRepository: AnswersRepository,
         private answerAttachmentRepository: AnswerAttachmentsRepository
     ) { }
 
-    async execute({ authorId, questionId, content, attachmentsIds }: editAnswerUseCaseRequest): Promise<editAnswerUseCaseResponse> {
+    async execute({ authorId, questionId, content, attachmentsIds }: EditAnswerUseCaseRequest): Promise<EditAnswerUseCaseResponse> {
 
         const answer = await this.answerRepository.findById(questionId);
 

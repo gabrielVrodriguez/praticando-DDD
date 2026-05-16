@@ -1,19 +1,19 @@
 import { InMemoryAnswersRepository } from '@/../test/repositories/in-memory-answers-repository';
-import { commentOnAnswerUseCase } from './comment-on-answer';
+import { CommentOnAnswerUseCase } from './comment-on-answer';
 import { InMemoryAnswerCommentsRepository } from 'test/repositories/in-memory-answer-comments-repository';
 import { makeAnswer } from 'test/factories/make-answer';
 
 let inMemoryAnswersRepository: InMemoryAnswersRepository;
 let inMemoryAnswerCommentsRepository: InMemoryAnswerCommentsRepository;
 
-let sut: commentOnAnswerUseCase;
+let sut: CommentOnAnswerUseCase;
 
 describe('comment on answer', () => {
     
     beforeEach(() => {
         inMemoryAnswersRepository = new InMemoryAnswersRepository();
         inMemoryAnswerCommentsRepository = new InMemoryAnswerCommentsRepository();
-        sut = new commentOnAnswerUseCase(inMemoryAnswersRepository, inMemoryAnswerCommentsRepository);
+        sut = new CommentOnAnswerUseCase(inMemoryAnswersRepository, inMemoryAnswerCommentsRepository);
     })
 
     it('should be able to coment on  answer', async () => {

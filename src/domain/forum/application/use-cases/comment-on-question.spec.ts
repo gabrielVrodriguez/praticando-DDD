@@ -1,5 +1,5 @@
 import { InMemoryQuestionsRepository } from '@/../test/repositories/in-memory-questions-repository';
-import { commentOnQuestionUseCase } from './comment-on-question';
+import { CommentOnQuestionUseCase } from './comment-on-question';
 import { InMemoryQuestionCommentsRepository } from 'test/repositories/in-memory-question-comments-repository';
 import { makeQuestion } from 'test/factories/make-question';
 import { InMemoryQuestionAttachmentsRepository } from 'test/repositories/in-memory-question-attachments.repository';
@@ -8,7 +8,7 @@ let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
 let inMemoryQuestionCommentsRepository: InMemoryQuestionCommentsRepository;
 
-let sut: commentOnQuestionUseCase;
+let sut: CommentOnQuestionUseCase;
 
 describe('comment on question', () => {
     
@@ -16,7 +16,7 @@ describe('comment on question', () => {
         inMemoryQuestionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository();
         inMemoryQuestionsRepository = new InMemoryQuestionsRepository(inMemoryQuestionAttachmentsRepository);
         inMemoryQuestionCommentsRepository = new InMemoryQuestionCommentsRepository();
-        sut = new commentOnQuestionUseCase(inMemoryQuestionsRepository, inMemoryQuestionCommentsRepository);
+        sut = new CommentOnQuestionUseCase(inMemoryQuestionsRepository, inMemoryQuestionCommentsRepository);
     })
 
     it('should be able to coment on  question', async () => {

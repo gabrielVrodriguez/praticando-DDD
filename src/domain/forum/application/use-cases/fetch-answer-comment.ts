@@ -2,19 +2,19 @@ import type { AnswerCommentsRepository } from "../../application/repositories/an
 import type { AnswerComment } from "../../enterprise/entities/answer-comment";
 import { right, type Either } from "@/core/either";
 
-export interface fetchAnswerCommentsUseCaseRequest {
+export interface FetchAnswerCommentsUseCaseRequest {
     page: number;
     answerId: string;
 }
 
-export type fetchAnswerCommentsUseCaseResponse = Either<null, { answerComments: AnswerComment[] }>;
+export type FetchAnswerCommentsUseCaseResponse = Either<null, { answerComments: AnswerComment[] }>;
 
 
-export class fetchAnswerCommentsUseCase {
+export class FetchAnswerCommentsUseCase {
 
     constructor(private answerCommentRepository: AnswerCommentsRepository) { }
 
-    async execute({ page, answerId }: fetchAnswerCommentsUseCaseRequest): Promise<fetchAnswerCommentsUseCaseResponse> {
+    async execute({ page, answerId }: FetchAnswerCommentsUseCaseRequest): Promise<FetchAnswerCommentsUseCaseResponse> {
 
         const answerComments = await this.answerCommentRepository.findManyByAnswerId(answerId, { page });
 

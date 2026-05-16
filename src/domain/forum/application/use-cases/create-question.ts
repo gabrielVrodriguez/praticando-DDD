@@ -5,22 +5,22 @@ import {right, type Either } from "@/core/either.js";
 import { QuestionAttachment } from "../../enterprise/entities/question-attachment";
 import { QuestionAttachmentList } from "../../enterprise/entities/question-attachment-list";
 
-interface createQuestionUseCaseRequest {
+interface CreateQuestionUseCaseRequest {
     authorId: string;
     title: string;
     content: string;
     attachmentsIds: string[];
 }
 
-type createQuestionUseCaseResponse = Either<null, { question: Question }>;
+type CreateQuestionUseCaseResponse = Either<null, { question: Question }>;
 
 
-export class createQuestionUseCase {
+export class CreateQuestionUseCase {
 
 
     constructor(private questionRepository: QuestionsRepository) { }
 
-    async execute({ authorId, title, content, attachmentsIds }: createQuestionUseCaseRequest): Promise<createQuestionUseCaseResponse> {
+    async execute({ authorId, title, content, attachmentsIds }: CreateQuestionUseCaseRequest): Promise<CreateQuestionUseCaseResponse> {
 
         const question = Question.create({
             authorId: new UniqueEntityId(authorId),

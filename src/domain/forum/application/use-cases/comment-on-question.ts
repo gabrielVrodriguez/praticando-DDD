@@ -3,20 +3,20 @@ import { QuestionComment } from "../../enterprise/entities/question-comment";
 import type { QuestionCommentsRepository } from "../repositories/question-comments-repository";
 import { type QuestionsRepository } from "../repositories/questions-repository";
 import { UniqueEntityId } from "@/core/entities/unique-entity-id.js";
-import {right, left, type Either } from "@/core/either.js";
-import { ResourceNotFoundError } from "./errors/resource-not-found.error";
+import { right, left, type Either } from "@/core/either.js";
+import { ResourceNotFoundError } from "../../../../core/errors/resource-not-found.error";
 
 
-interface commentOnQuestionUseCaseRequest {
+interface CommentOnQuestionUseCaseRequest {
     authorId: string;
     questionId: string;
     content: string;
 }
 
-type commentOnQuestionUseCaseResponse = Either<ResourceNotFoundError, { question: QuestionComment }>;
+type CommentOnQuestionUseCaseResponse = Either<ResourceNotFoundError, { question: QuestionComment }>;
 
 
-export class commentOnQuestionUseCase {
+export class CommentOnQuestionUseCase {
 
 
     constructor(
@@ -24,7 +24,7 @@ export class commentOnQuestionUseCase {
         private questionCommentsRepository: QuestionCommentsRepository
     ) { }
 
-    async execute({ authorId, questionId, content }: commentOnQuestionUseCaseRequest): Promise<commentOnQuestionUseCaseResponse> {
+    async execute({ authorId, questionId, content }: CommentOnQuestionUseCaseRequest): Promise<CommentOnQuestionUseCaseResponse> {
 
         const question = await this.questionRepository.findById(questionId);
 
@@ -33,9 +33,9 @@ export class commentOnQuestionUseCase {
         }
 
         const questionComment = QuestionComment.create({
-           questionId: new UniqueEntityId(questionId),
-           authorId: new UniqueEntityId('gabriel'),
-           content
+            questionId: new UniqueEntityId(questionId),
+            authorId: new UniqueEntityId('gabriel'),
+            content
         })
 
         await this.questionCommentsRepository.create(questionComment);
@@ -43,8 +43,8 @@ export class commentOnQuestionUseCase {
 
         return right({ question: questionComment });
 
-       
 
-       ;
+
+        ;
     }
 }

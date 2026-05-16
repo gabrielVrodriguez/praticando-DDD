@@ -1,5 +1,5 @@
 import type { AnswersRepository } from "@/domain/forum/application/repositories/answers-repository";
-import { type fetchQuestionAnswersUseCaseRequest } from "@/domain/forum/application/use-cases/fetch-question-answers";
+import { type FetchQuestionAnswersUseCaseRequest } from "@/domain/forum/application/use-cases/fetch-question-answers";
 import { Answer } from "@/domain/forum/enterprise/entities/answer";
 import type { AnswerAttachmentsRepository } from "@/domain/forum/application/repositories/answer-attachments.repository";
 
@@ -24,7 +24,7 @@ export class InMemoryAnswersRepository implements AnswersRepository {
         return answer;
     }
 
-    async findManyByQuestionId ({page, questionId}: fetchQuestionAnswersUseCaseRequest): Promise<Answer[]>{
+    async findManyByQuestionId ({page, questionId}: FetchQuestionAnswersUseCaseRequest): Promise<Answer[]>{
         const items = this.items.filter(item => item.questionId.toString() === questionId)
         .slice((page - 1) * 20 , page * 20);
         return items;

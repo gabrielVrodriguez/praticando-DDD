@@ -1,24 +1,24 @@
 import type { AnswerCommentsRepository } from "../repositories/answer-comments-repository";
 import { right, left, type Either } from "@/core/either.js";
-import { ResourceNotFoundError } from "./errors/resource-not-found.error";
-import { NotAllowedError } from "./errors/not-allowed.error";
+import { ResourceNotFoundError } from "../../../../core/errors/resource-not-found.error";
+import { NotAllowedError } from "../../../../core/errors/not-allowed.error";
 
-interface deleteAnswerCommentUseCaseRequest {
+interface DeleteAnswerCommentUseCaseRequest {
     authorId: string;
     answerCommentId: string;
 }
 
-type deleteAnswerCommentUseCaseResponse = Either<ResourceNotFoundError | NotAllowedError, {}>;
+type DeleteAnswerCommentUseCaseResponse = Either<ResourceNotFoundError | NotAllowedError, {}>;
 
 
-export class deleteAnswerCommentUseCase {
+export class DeleteAnswerCommentUseCase {
 
 
     constructor(
         private answerCommentsRepository: AnswerCommentsRepository
     ) { }
 
-    async execute({ authorId, answerCommentId }: deleteAnswerCommentUseCaseRequest): Promise<deleteAnswerCommentUseCaseResponse> {
+    async execute({ authorId, answerCommentId }: DeleteAnswerCommentUseCaseRequest): Promise<DeleteAnswerCommentUseCaseResponse> {
 
 
         const answerComment = await this.answerCommentsRepository.findById(answerCommentId);

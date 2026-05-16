@@ -16,7 +16,6 @@ export abstract class Comment<Props extends CommentProps> extends Entity<Props> 
         return this.props.authorId;
     }
 
-
     get content() {
         return this.props.content;
     }

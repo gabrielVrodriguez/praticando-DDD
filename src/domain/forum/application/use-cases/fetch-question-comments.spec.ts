@@ -1,10 +1,10 @@
 import { InMemoryQuestionCommentsRepository } from '@/../test/repositories/in-memory-question-comments-repository';
-import { fetchQuestionCommentsUseCase } from './fetch-question-comments';
+import { FetchQuestionCommentsUseCase } from './fetch-question-comments';
 import { makeQuestionComment } from 'test/factories/make-question-comment';
 import { UniqueEntityId } from '@/core/entities/unique-entity-id';
 
 let inMemoryCommentsRepository: InMemoryQuestionCommentsRepository;
-let sut: fetchQuestionCommentsUseCase;
+let sut: FetchQuestionCommentsUseCase;
 
 describe('fetch question comments', () => {
 
@@ -12,7 +12,7 @@ describe('fetch question comments', () => {
 
     beforeEach(async () => {
         inMemoryCommentsRepository = new InMemoryQuestionCommentsRepository();
-        sut = new fetchQuestionCommentsUseCase(inMemoryCommentsRepository);
+        sut = new FetchQuestionCommentsUseCase(inMemoryCommentsRepository);
     })
 
     it('should be able to fetch comments for a question', async () => {

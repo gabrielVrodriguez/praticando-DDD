@@ -4,9 +4,9 @@ import { Answer } from '../../enterprise/entities/answer.js';
 import type { AnswersRepository } from '../repositories/answers-repository.js';
 import type { QuestionsRepository } from '../repositories/questions-repository.js';
 import type { Question } from '../../enterprise/entities/question.js';
-import  { right, left,type Either } from '@/core/either.js';
-import { ResourceNotFoundError } from './errors/resource-not-found.error.js';
-import { NotAllowedError } from './errors/not-allowed.error.js';
+import { right, left, type Either } from '@/core/either.js';
+import { ResourceNotFoundError } from '../../../../core/errors/resource-not-found.error.js';
+import { NotAllowedError } from '../../../../core/errors/not-allowed.error.js';
 interface ChooseBestAnswerUseCaseRequest {
     answerId: string;
     authorId: string;
@@ -27,7 +27,7 @@ export class ChooseBestAnswerUseCase {
         const answer = await this.answersRepository.findById(answerId);
 
         if (!answer) {
-           return left(new ResourceNotFoundError());
+            return left(new ResourceNotFoundError());
         }
 
         const question = await this.questionRepository.findById(answer.questionId.toValue())
@@ -43,6 +43,6 @@ export class ChooseBestAnswerUseCase {
         question.bestAnswerId = new UniqueEntityId(answerId);
 
         return right({ question });
-      
+
     }
 }

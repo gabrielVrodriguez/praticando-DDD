@@ -1,25 +1,25 @@
 import type { QuestionCommentsRepository } from "../repositories/question-comments-repository";
-import {right, left, type Either } from "@/core/either.js";
-import { ResourceNotFoundError } from "./errors/resource-not-found.error";
-import { NotAllowedError } from "./errors/not-allowed.error";
-interface deleteQuestionCommentUseCaseRequest {
+import { right, left, type Either } from "@/core/either.js";
+import { ResourceNotFoundError } from "../../../../core/errors/resource-not-found.error";
+import { NotAllowedError } from "../../../../core/errors/not-allowed.error";
+interface DeleteQuestionCommentUseCaseRequest {
     authorId: string;
     questionCommentId: string;
 }
 
-type deleteQuestionCommentUseCaseResponse = Either<ResourceNotFoundError | NotAllowedError, {}>;
+type DeleteQuestionCommentUseCaseResponse = Either<ResourceNotFoundError | NotAllowedError, {}>;
 
 
-export class deleteQuestionCommentUseCase {
+export class DeleteQuestionCommentUseCase {
 
 
     constructor(
         private questionCommentsRepository: QuestionCommentsRepository
     ) { }
 
-    async execute({ authorId, questionCommentId }: deleteQuestionCommentUseCaseRequest): Promise<deleteQuestionCommentUseCaseResponse> {
+    async execute({ authorId, questionCommentId }: DeleteQuestionCommentUseCaseRequest): Promise<DeleteQuestionCommentUseCaseResponse> {
 
-       
+
         const questionComment = await this.questionCommentsRepository.findById(questionCommentId);
 
         if (!questionComment) {
@@ -33,6 +33,6 @@ export class deleteQuestionCommentUseCase {
         await this.questionCommentsRepository.delete(questionComment);
 
         return right({});
-    
+
     }
 }

@@ -1,5 +1,5 @@
 import { InMemoryQuestionsRepository } from '@/../test/repositories/in-memory-questions-repository';
-import { deleteQuestionUseCase } from './delete-question';
+import { DeleteQuestionUseCase } from './delete-question';
 
 import { makeQuestion } from 'test/factories/make-question';
 import { UniqueEntityId } from '@/core/entities/unique-entity-id';
@@ -8,7 +8,7 @@ import { makeQuestionAttachment } from 'test/factories/make-question-attachment'
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository;
 let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttachmentsRepository;
-let sut: deleteQuestionUseCase;
+let sut: DeleteQuestionUseCase;
 
 
 describe('delete a question', () => {
@@ -16,7 +16,7 @@ describe('delete a question', () => {
     beforeEach(() => {
         inMemoryQuestionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository();
         inMemoryQuestionsRepository = new InMemoryQuestionsRepository(inMemoryQuestionAttachmentsRepository);
-        sut = new deleteQuestionUseCase(inMemoryQuestionsRepository);
+        sut = new DeleteQuestionUseCase(inMemoryQuestionsRepository);
     })
 
     it('should be able to delete a question', async () => {
