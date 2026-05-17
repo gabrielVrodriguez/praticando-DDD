@@ -11,8 +11,19 @@ export abstract class Entity<Props> {
     }
 
     protected constructor(id?: UniqueEntityId, props?: any) {
-        this._id = id ?? new UniqueEntityId() ;
+        this._id = id ?? new UniqueEntityId();
         this.props = props;
+
+    }
+
+    public equals(entity: Entity<any>): boolean {
+        if (entity === this) true
+
+        if (entity.id === this.id) {
+            return true
+        }
+
+        return false
 
     }
 
