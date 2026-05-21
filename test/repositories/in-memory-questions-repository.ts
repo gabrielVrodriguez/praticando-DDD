@@ -2,6 +2,7 @@ import type { PaginationParams } from '@/core/repositories/pagination.params';
 import type { QuestionAttachmentsRepository } from '@/domain/forum/application/repositories/question-attachments.repository';
 import type { QuestionsRepository } from '@/domain/forum/application/repositories/questions-repository';
 import type { Question } from '@/domain/forum/enterprise/entities/question';
+import { DomainEvents } from '@/core/events/domain-events';
 
 export class InMemoryQuestionsRepository implements QuestionsRepository {
 
@@ -9,7 +10,7 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
 
   constructor(
     private questionAttachmentsRepository: QuestionAttachmentsRepository
-  ) {}
+  ) { }
 
   async findById(id: string): Promise<Question | null> {
     const question = this.items.find(item => item.id.toString() === id);
@@ -43,6 +44,9 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
 
   async create(question: Question): Promise<void> {
     this.items.push(question);
+
+    DomainEvents.dispatchEventsForAggregate(question.id);
+
   }
 
 
@@ -62,5 +66,8 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
     if (questionIndex >= 0) {
       this.items[questionIndex] = question;
     }
+
+    DomainEvents.dispatchEventsForAggregate(question.id);
+
   }
 }
