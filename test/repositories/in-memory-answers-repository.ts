@@ -2,6 +2,7 @@ import type { AnswersRepository } from "@/domain/forum/application/repositories/
 import { type FetchQuestionAnswersUseCaseRequest } from "@/domain/forum/application/use-cases/fetch-question-answers";
 import { Answer } from "@/domain/forum/enterprise/entities/answer";
 import type { AnswerAttachmentsRepository } from "@/domain/forum/application/repositories/answer-attachments.repository";
+import { DomainEvents } from "@/core/events/domain-events";
 
 
 export class InMemoryAnswersRepository implements AnswersRepository {
@@ -10,10 +11,12 @@ export class InMemoryAnswersRepository implements AnswersRepository {
 
     constructor(
         private answerAttachmentsRepository: AnswerAttachmentsRepository
-    ) {}
+    ) { }
 
     async create(answer: Answer): Promise<void> {
         this.items.push(answer);
+
+        DomainEvents.dispatchEventsForAggregate(answer.id);
     }
 
     async findById(id: string): Promise<Answer | null> {
@@ -24,27 +27,30 @@ export class InMemoryAnswersRepository implements AnswersRepository {
         return answer;
     }
 
-    async findManyByQuestionId ({page, questionId}: FetchQuestionAnswersUseCaseRequest): Promise<Answer[]>{
+    async findManyByQuestionId({ page, questionId }: FetchQuestionAnswersUseCaseRequest): Promise<Answer[]> {
         const items = this.items.filter(item => item.questionId.toString() === questionId)
-        .slice((page - 1) * 20 , page * 20);
+            .slice((page - 1) * 20, page * 20);
         return items;
     }
 
-    async delete (answer: Answer): Promise<void> {
+    async delete(answer: Answer): Promise<void> {
         const answerIndex = this.items.findIndex(item => item.id === answer.id);
         this.items.splice(answerIndex, 1);
 
         await this.answerAttachmentsRepository.deleteManyByAnswerId(answer.id.toString());
     }
 
-    async save (answer: Answer): Promise<void> {
+    async save(answer: Answer): Promise<void> {
         const answerIndex = this.items.findIndex(item => item.id === answer.id);
 
         if (answerIndex >= 0) {
             this.items[answerIndex] = answer;
         }
+
+        DomainEvents.dispatchEventsForAggregate(answer.id);
+
     }
-    
+
 
 
 }
